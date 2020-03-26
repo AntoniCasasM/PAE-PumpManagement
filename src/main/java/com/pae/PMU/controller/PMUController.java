@@ -12,6 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.List;
+
 @SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/")
@@ -22,21 +24,32 @@ public class PMUController {
     PMUService PMUService;
 
 
-    @RequestMapping(value = "sampleGET", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get a pump", notes = "")
-    public ResponseEntity sampleGET(@ApiParam(value = "The pump id.", example = "1", required = true) @RequestParam("pumpId") String pumpId) {
+    @RequestMapping(value = "pump", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get a pump by ID", notes = "")
+    public ResponseEntity getPump(@ApiParam(value = "The pump id.", example = "1", required = true) @RequestParam("pumpId") String pumpId) {
         PumpEntity toRet=PMUService.getPump(pumpId);
         return new ResponseEntity<>(toRet, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "samplePOST", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Post some information", notes = "")
-    public ResponseEntity samplePOST(@ApiParam(value = "The pump id.", example = "1", required = true) @RequestBody PumpSchema pump) {
-        PumpEntity entity=new PumpEntity();
-        entity.setId(pump.getPumpId());
-        PMUService.postPump(entity);
+    @RequestMapping(value = "pump", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Create a new pump", notes = "")
+    public ResponseEntity postPump(@ApiParam(value = "The pump id.", example = "1", required = true) @RequestBody PumpSchema pump) {
+        PMUService.postPump(pump);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "pump", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update pump values", notes = "")
+    public ResponseEntity updatePump(@ApiParam(value = "The pump id.", example = "1", required = true) @RequestBody PumpSchema pump) {
+        PMUService.updatePump(pump);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "addAdjacentPumps", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Add adjacent pumps", notes = "")
+    public ResponseEntity updatePump(@ApiParam(value = "The pump to which the other pumps will be added as adjacent.", example = "1", required = true) @RequestParam("pumpId") String pumpId,@ApiParam(value = "The pumps, identified by their id, to add as adjacent.", example = "2", required = true) @RequestBody List<String> adjcentPumps) {
+        PMUService.addAdjacentPumps(pumpId,adjcentPumps);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
