@@ -1,12 +1,20 @@
 package com.pae.PMU.service;
 
+import com.pae.PMU.entity.MaterialEntity;
 import com.pae.PMU.entity.PumpEntity;
+import com.pae.PMU.entity.PumpInterventionEntity;
+import com.pae.PMU.repository.MaterialRepository;
+import com.pae.PMU.repository.PumpInterventionRepository;
 import com.pae.PMU.repository.PumpRepository;
+import com.pae.PMU.schema.InterventionSchemaGET;
+import com.pae.PMU.schema.InterventionSchema;
+import com.pae.PMU.schema.MaterialSchema;
 import com.pae.PMU.schema.PumpSchema;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +22,12 @@ import java.util.Set;
 public class PMUService {
     @Autowired
     PumpRepository pumpRepository;
+    @Autowired
+    PumpInterventionRepository pumpInterventionRepository;
+    @Autowired
+    MaterialRepository materialRepository;
+
+    Double costPerKm=0.1;
 
     public PumpEntity getPump(String id) {
         return pumpRepository.getOne(id);
@@ -44,5 +58,50 @@ public class PMUService {
     public void updatePump(PumpSchema pump) {
         PumpEntity oldPump=pumpRepository.getOne(pump.getPumpId());
         oldPump.update(pump);
+    }
+
+    public void postIntervention(InterventionSchema intervention) {
+        PumpInterventionEntity interventionEntity= new PumpInterventionEntity(intervention);
+        for(MaterialSchema material:intervention.getMaterials()) {
+            if (!materialRepository.existsById(material.getMaterial())) {
+                MaterialEntity newMaterial=new MaterialEntity(material);
+                materialRepository.save(newMaterial);
+            }
+        }
+        pumpInterventionRepository.save(interventionEntity);
+    }
+
+    public List<InterventionSchemaGET> getInterventions(String pumpId) {
+        List<PumpInterventionEntity> interventions=pumpInterventionRepository.findByPumpId(pumpId);
+        List<InterventionSchemaGET> result=new ArrayList<>();
+        for(PumpInterventionEntity intervention:interventions) {
+            Double price=getPriceIntervention(intervention);
+            InterventionSchemaGET aux=new InterventionSchemaGET(intervention,price);
+            result.add(aux);
+        }
+        return result;
+    }
+
+    public void modifyMaterial(MaterialSchema material) {
+        if (materialRepository.existsById(material.getMaterial())) {
+            MaterialEntity item=materialRepository.getOne(material.getMaterial());
+            item.setCostPerUnit(material.getTotalCost()/material.getUnits());
+            materialRepository.save(item);
+        }
+        else {
+            MaterialEntity item=new MaterialEntity(material);
+            materialRepository.save(item);
+        }
+    }
+
+    public Double getPriceIntervention(PumpInterventionEntity intervention){
+        Double result=0.0;
+        result+=intervention.getWorkers()*intervention.getCostPerWorker();
+        result+=intervention.getDistanceTravelled()*costPerKm;
+        for (Pair<String,Double> item:intervention.getMaterials()) {
+            MaterialEntity material=materialRepository.getOne(item.getKey());
+            result+=material.getCostPerUnit()*item.getValue();
+        }
+        return result;
     }
 }

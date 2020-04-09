@@ -1,6 +1,9 @@
 package com.pae.PMU.controller;
 
 import com.pae.PMU.entity.PumpEntity;
+import com.pae.PMU.schema.InterventionSchema;
+import com.pae.PMU.schema.InterventionSchemaGET;
+import com.pae.PMU.schema.MaterialSchema;
 import com.pae.PMU.schema.PumpSchema;
 import com.pae.PMU.service.PMUService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +54,27 @@ public class PMUController {
         PMUService.addAdjacentPumps(pumpId,adjcentPumps);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "postIntervention", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Post intervention", notes = "")
+    public ResponseEntity postIntervention(@ApiParam(value = "The intervention schema.", required = true) @RequestBody InterventionSchema intervention) {
+        PMUService.postIntervention(intervention);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "postMaterial", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Post a material, computes cost per unit", notes = "")
+    public ResponseEntity postMaterial(@ApiParam(value = "The material schema.", required = true) @RequestBody MaterialSchema material) {
+        PMUService.modifyMaterial(material);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "getInterventions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all interventions of a pump", notes = "")
+    public ResponseEntity getInterventions(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) {
+        List<InterventionSchemaGET> res=PMUService.getInterventions(pumpId);
+        return new ResponseEntity<List<InterventionSchemaGET>>(res,HttpStatus.OK);
+    }
+
 }
 

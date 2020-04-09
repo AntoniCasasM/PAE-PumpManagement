@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 @Entity
-    @Table(name = "PumpEntity")
+    @Table(name = "pump_entities")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public class PumpEntity implements Serializable {
 
@@ -49,7 +49,7 @@ import java.util.Set;
         @ElementCollection
         private Set<String> adjacentPumps;
 
-        public PumpEntity() {
+    public PumpEntity() {
 
         }
 
@@ -79,7 +79,8 @@ import java.util.Set;
             waterQuality=pump.getWaterQuality();
         }
 
-        public String getId() {
+
+    public String getId() {
             return id;
         }
 
