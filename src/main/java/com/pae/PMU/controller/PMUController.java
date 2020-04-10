@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -71,10 +72,16 @@ public class PMUController {
 
     @RequestMapping(value = "getInterventions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all interventions of a pump", notes = "")
-    public ResponseEntity getInterventions(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) {
+    public ResponseEntity getInterventions(@ApiParam(value = "The pump id.", example="1",required = true) @RequestParam String pumpId) {
         List<InterventionSchemaGET> res=PMUService.getInterventions(pumpId);
         return new ResponseEntity<List<InterventionSchemaGET>>(res,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "getInterventionsBetweenDates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all interventions of a pump between the dates spaciefied", notes = "")
+    public ResponseEntity getInterventionsBetweenDates(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId, @ApiParam(value = "From this date.",example = "2020-02-02T20:50:12.123Z", required = true) @RequestParam Date from, @ApiParam(value = "Up to this date.", required = true,example = "2020-02-02T20:50:12.123Z") @RequestParam Date to) {
+        List<InterventionSchemaGET> res=PMUService.getInterventionsBetweenDates(pumpId,from,to);
+        return new ResponseEntity<List<InterventionSchemaGET>>(res,HttpStatus.OK);
+    }
 }
 

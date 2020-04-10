@@ -14,9 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PMUService {
@@ -79,6 +77,7 @@ public class PMUService {
             InterventionSchemaGET aux=new InterventionSchemaGET(intervention,price);
             result.add(aux);
         }
+        Collections.sort(result);
         return result;
     }
 
@@ -101,6 +100,17 @@ public class PMUService {
         for (Pair<String,Double> item:intervention.getMaterials()) {
             MaterialEntity material=materialRepository.getOne(item.getKey());
             result+=material.getCostPerUnit()*item.getValue();
+        }
+        return result;
+    }
+
+    public List<InterventionSchemaGET> getInterventionsBetweenDates(String pumpId, Date from, Date to) {
+        List<InterventionSchemaGET> toFix=getInterventions(pumpId);
+        List<InterventionSchemaGET> result=new ArrayList<>();
+        for(InterventionSchemaGET intervention:toFix) {
+            if (intervention.getInterventionDate().compareTo(from)<0 && intervention.getInterventionDate().compareTo(to)>0) {
+                result.add(intervention);
+            }
         }
         return result;
     }
