@@ -1,10 +1,7 @@
 package com.pae.PMU.controller;
 
 import com.pae.PMU.entity.PumpEntity;
-import com.pae.PMU.schema.InterventionSchema;
-import com.pae.PMU.schema.InterventionSchemaGET;
-import com.pae.PMU.schema.MaterialSchema;
-import com.pae.PMU.schema.PumpSchema;
+import com.pae.PMU.schema.*;
 import com.pae.PMU.service.PMUService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,6 +79,13 @@ public class PMUController {
     public ResponseEntity getInterventionsBetweenDates(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId, @ApiParam(value = "From this date.",example = "2020-02-02T20:50:12.123Z", required = true) @RequestParam Date from, @ApiParam(value = "Up to this date.", required = true,example = "2020-02-02T20:50:12.123Z") @RequestParam Date to) {
         List<InterventionSchemaGET> res=PMUService.getInterventionsBetweenDates(pumpId,from,to);
         return new ResponseEntity<List<InterventionSchemaGET>>(res,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "getPredictedFailureDate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all interventions of a pump between the dates spaciefied", notes = "")
+    public ResponseEntity getPredictedFailureDate(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) {
+        FailureSchema res=PMUService.getPredictedFailureDate(pumpId);
+        return new ResponseEntity<FailureSchema>(res,HttpStatus.OK);
     }
 }
 

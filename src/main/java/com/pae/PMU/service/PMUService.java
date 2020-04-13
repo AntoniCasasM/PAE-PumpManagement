@@ -6,10 +6,7 @@ import com.pae.PMU.entity.PumpInterventionEntity;
 import com.pae.PMU.repository.MaterialRepository;
 import com.pae.PMU.repository.PumpInterventionRepository;
 import com.pae.PMU.repository.PumpRepository;
-import com.pae.PMU.schema.InterventionSchemaGET;
-import com.pae.PMU.schema.InterventionSchema;
-import com.pae.PMU.schema.MaterialSchema;
-import com.pae.PMU.schema.PumpSchema;
+import com.pae.PMU.schema.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +21,8 @@ public class PMUService {
     PumpInterventionRepository pumpInterventionRepository;
     @Autowired
     MaterialRepository materialRepository;
-
+    @Autowired
+    PredictionService predictionService;
     Double costPerKm=0.1;
 
     public PumpEntity getPump(String id) {
@@ -113,5 +111,11 @@ public class PMUService {
             }
         }
         return result;
+    }
+
+    public FailureSchema getPredictedFailureDate(String pumpId) {
+        PumpEntity pump=pumpRepository.getOne(pumpId);
+        FailureSchema failure=predictionService.predict(pump);
+        return failure;
     }
 }
