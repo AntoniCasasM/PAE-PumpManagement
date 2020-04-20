@@ -12,6 +12,10 @@ public class InterventionSchemaGET extends InterventionSchema  implements Compar
         this.price=price;
     }
 
+    public InterventionSchemaGET(PumpInterventionEntity intervention) {
+        super(intervention);
+    }
+
     public double getPrice() {
         return price;
     }

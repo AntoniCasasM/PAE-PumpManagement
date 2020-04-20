@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -113,7 +114,7 @@ public class PMUService {
         return result;
     }
 
-    public FailureSchema getPredictedFailureDate(String pumpId) {
+    public FailureSchema getPredictedFailureDate(String pumpId) throws IOException {
         PumpEntity pump=pumpRepository.getOne(pumpId);
         FailureSchema failure=predictionService.predict(pump);
         return failure;

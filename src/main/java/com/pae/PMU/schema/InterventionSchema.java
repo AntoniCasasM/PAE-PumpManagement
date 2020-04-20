@@ -20,7 +20,7 @@ public class InterventionSchema {
     private Integer interventionCode;
     @ApiModelProperty(notes = "How long until the intervention team arrived in days.", example = "30", required = true)
     private Integer responseTime;
-    @ApiModelProperty(notes = "Type of intervention.", example = "Maintenance", required = true)
+    @ApiModelProperty(notes = "Type of pump involved in the intervention.", example = "Wind", required = true)
     private String type;
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @ApiModelProperty(notes = "When the pump failed.", example = "2020-01-02T20:50:12.123Z", required = false)

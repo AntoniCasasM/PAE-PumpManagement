@@ -16,4 +16,9 @@ public interface PumpInterventionRepository extends JpaRepository<PumpInterventi
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "50000")})
     @Fetch(value = FetchMode.SELECT)
     List<PumpInterventionEntity> findByPumpId(String pumpId);
+
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "50000")})
+    @Fetch(value = FetchMode.SELECT)
+    List<PumpInterventionEntity> findByType(String type);
+
 }

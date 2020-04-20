@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class PMUController {
 
     @RequestMapping(value = "getPredictedFailureDate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all interventions of a pump between the dates spaciefied", notes = "")
-    public ResponseEntity getPredictedFailureDate(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) {
+    public ResponseEntity getPredictedFailureDate(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) throws IOException {
         FailureSchema res=PMUService.getPredictedFailureDate(pumpId);
         return new ResponseEntity<FailureSchema>(res,HttpStatus.OK);
     }
