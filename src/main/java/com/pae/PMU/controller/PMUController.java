@@ -3,6 +3,7 @@ package com.pae.PMU.controller;
 import com.pae.PMU.entity.PumpEntity;
 import com.pae.PMU.schema.*;
 import com.pae.PMU.service.PMUService;
+import com.pae.PMU.service.PredictionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,12 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("ALL")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/")
 @Api(value = "Stakeholders Recommender API", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,6 +30,8 @@ public class PMUController {
 
     @Autowired
     PMUService PMUService;
+    @Autowired
+    PredictionService PredictionService;
 
 
     @RequestMapping(value = "pump", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,5 +96,21 @@ public class PMUController {
         FailureSchema res=PMUService.getPredictedFailureDate(pumpId);
         return new ResponseEntity<FailureSchema>(res,HttpStatus.OK);
     }
+
+    @RequestMapping(value = "getAllIds", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all ids of pumps", notes = "")
+    public ResponseEntity getAllIds() throws IOException {
+        Set<String> res=PMUService.getAllIds();
+        return new ResponseEntity<Set<String>>(res,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "getOptimalRoute", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get optimal route from this pump", notes = "")
+    public ResponseEntity getOptimalRoute(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) throws IOException {
+        List<String> res= PredictionService.getOptimalRoute(pumpId);
+        return new ResponseEntity<List<String>>(res,HttpStatus.OK);
+    }
+
+
 }
 

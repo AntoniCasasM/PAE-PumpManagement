@@ -27,7 +27,7 @@ public class SwaggerConfig {
         return new ApiInfo(
                 "PMU Management",
                 "API for PMU management",
-                "2.0",
+                "0.1",
                 null,
                 null,
                 null,

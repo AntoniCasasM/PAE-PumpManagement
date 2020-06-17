@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.util.Date;
 import java.util.List;
 
 @ApiModel(description = "Class representing a pump")
@@ -24,9 +25,9 @@ public class PumpSchema {
     private boolean underPMU;
     @ApiModelProperty(notes = "Location of the pump", example = "City in turkana", required = true)
     private String location;
-    @ApiModelProperty(notes = "Northing.", example = "50°52′10″N", required = true)
+    @ApiModelProperty(notes = "Degrees minutes seconds.", example = "50 52 10", required = true)
     private String northings;
-    @ApiModelProperty(notes = "Easting.", example = "50°52′10″N", required = true)
+    @ApiModelProperty(notes = "Degrees minutes seconds.", example = "50 52 10", required = true)
     private String eastings;
     @ApiModelProperty(notes = "Type of pump.", example = "Wind", required = true)
     private String type;
@@ -60,7 +61,6 @@ public class PumpSchema {
     private Double inletYieldTest;
     @ApiModelProperty(notes = "Water quality of the pump.", example = "Good", required = false)
     private String waterQuality;
-
 
     public String getPumpId() {
         return pumpId;

@@ -5,6 +5,7 @@ import com.pae.PMU.schema.PumpSchema;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -45,38 +46,38 @@ import java.util.Set;
         private Double inlet;
         private Double inletYieldTest;
         private String waterQuality;
-
+        private Date lastUpdated;
         @ElementCollection
         private Set<String> adjacentPumps;
-
     public PumpEntity() {
 
         }
 
         public PumpEntity(PumpSchema pump) {
-            id=pump.getPumpId();
-            name=pump.getName();
-            territory=pump.getTerritory();
-            builtBy=pump.getBuiltBy();
-            maintainedBy=pump.getMaintainedBy();
-            underPMU=pump.isUnderPMU();
-            location=pump.getLocation();
-            northings=pump.getNorthings();
-            eastings=pump.getEastings();
-            type=pump.getType();
-            model=pump.getModel();
-            pumpSize=pump.getPumpSize();
-            remarks=pump.getRemarks();
-            runningBalance=pump.getRunningBalance();
-            comiteeContracts=pump.getComiteeContracts();
-            drillingCompany=pump.getDrillingCompany();
-            drillingYear=pump.getDrillingYear();
-            boreholeDepth=pump.getBoreholeDepth();
-            boreholeDiameter=pump.getBoreholeDiameter();
-            testedYield=pump.getTestedYield();
-            inlet=pump.getInlet();
-            inletYieldTest=pump.getInletYieldTest();
-            waterQuality=pump.getWaterQuality();
+            this.id=pump.getPumpId();
+            this.name=pump.getName();
+            this.territory=pump.getTerritory();
+            this.builtBy=pump.getBuiltBy();
+            this.maintainedBy=pump.getMaintainedBy();
+            this.underPMU=pump.isUnderPMU();
+            this.location=pump.getLocation();
+            this.northings=pump.getNorthings();
+            this.eastings=pump.getEastings();
+            this.type=pump.getType();
+            this.model=pump.getModel();
+            this.pumpSize=pump.getPumpSize();
+            this.remarks=pump.getRemarks();
+            this.runningBalance=pump.getRunningBalance();
+            this.comiteeContracts=pump.getComiteeContracts();
+            this.drillingCompany=pump.getDrillingCompany();
+            this.drillingYear=pump.getDrillingYear();
+            this.boreholeDepth=pump.getBoreholeDepth();
+            this.boreholeDiameter=pump.getBoreholeDiameter();
+            this.testedYield=pump.getTestedYield();
+            this.inlet=pump.getInlet();
+            this.inletYieldTest=pump.getInletYieldTest();
+            this.waterQuality=pump.getWaterQuality();
+            this.lastUpdated=new Date();
         }
 
 
@@ -288,6 +289,14 @@ import java.util.Set;
             this.waterQuality = waterQuality;
         }
 
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     public void update(PumpSchema pump) {
         if(pump.getName()!=null) name=pump.getName();
         if(pump.getTerritory()!=null) territory=pump.getTerritory();
@@ -311,5 +320,6 @@ import java.util.Set;
         if(pump.getInlet()!=null) inlet=pump.getInlet();
         if(pump.getInletYieldTest()!=null) inletYieldTest=pump.getInletYieldTest();
         if(pump.getWaterQuality()!=null) waterQuality=pump.getWaterQuality();
+        this.lastUpdated=new Date();
     }
 }

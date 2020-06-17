@@ -33,6 +33,7 @@ public class PumpInterventionEntity {
     private Integer distanceTravelled;
     private Integer workers;
     private Integer costPerWorker;
+    private Double interventionPrice;
 
     @ElementCollection
     private List<Pair<String,Double>> materials;
@@ -66,6 +67,14 @@ public class PumpInterventionEntity {
             }
         }
         this.materials=materialUnitsPair;
+    }
+
+    public Double getInterventionPrice() {
+        return interventionPrice;
+    }
+
+    public void setInterventionPrice(Double interventionPrice) {
+        this.interventionPrice = interventionPrice;
     }
 
     public String getPumpId() {

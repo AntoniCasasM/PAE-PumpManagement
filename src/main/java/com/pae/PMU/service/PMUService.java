@@ -36,7 +36,8 @@ public class PMUService {
 
     public void addAdjacentPumps(String pumpId, List<String> adjacentPumps) {
         PumpEntity mainPump=pumpRepository.getOne(pumpId);
-        List<PumpEntity> secondaryPumps=pumpRepository.findAllById(adjacentPumps);
+        List<PumpEntity> secondaryPumps=new ArrayList<>();
+        for (String s:adjacentPumps)secondaryPumps.add(pumpRepository.getOne(s));
         Set<String> currentAdjacent=mainPump.getAdjacentPumps();
         currentAdjacent.addAll(adjacentPumps);
         mainPump.setAdjacentPumps(currentAdjacent);
@@ -44,12 +45,12 @@ public class PMUService {
         for (PumpEntity pump:secondaryPumps) {
             if (!pump.getAdjacentPumps().contains(pumpId)) {
                 Set<String> adjacent=pump.getAdjacentPumps();
-                adjacentPumps.add(pumpId);
+                adjacent.add(pumpId);
                 pump.setAdjacentPumps(adjacent);
                 pumpRepository.save(pump);
             }
         }
-
+        pumpRepository.flush();
     }
 
     public void updatePump(PumpSchema pump) {
@@ -65,6 +66,7 @@ public class PMUService {
                 materialRepository.save(newMaterial);
             }
         }
+        interventionEntity.setInterventionPrice(getPriceIntervention(interventionEntity));
         pumpInterventionRepository.save(interventionEntity);
     }
 
@@ -118,5 +120,13 @@ public class PMUService {
         PumpEntity pump=pumpRepository.getOne(pumpId);
         FailureSchema failure=predictionService.predict(pump);
         return failure;
+    }
+
+    public Set<String> getAllIds() throws IOException {
+        Set<String> ids=new HashSet<>();
+        for (PumpEntity pump: pumpRepository.findAll()) {
+            ids.add(pump.getId());
+        }
+        return ids;
     }
 }
