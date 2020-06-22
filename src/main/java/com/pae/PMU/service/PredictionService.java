@@ -70,7 +70,7 @@ public class PredictionService {
             List<InterventionSchemaGET> orderedByDate = getInterventions(closest.getPumpId());
             Date currentFailureDate = null;
             for (InterventionSchemaGET inter : orderedByDate) {
-                if (inter.getFailureDate().compareTo(closest.getFailureDate()) < 0) {
+                if (inter.getFailureDate().compareTo(closest.getFailureDate()) > 0) {
                     currentFailureDate = inter.getFailureDate();
                     break;
                 }
@@ -78,7 +78,7 @@ public class PredictionService {
             FailureSchema failure = new FailureSchema();
             if (currentFailureDate != null) {
                 BigInteger diff = new BigInteger(String.valueOf(closest.getFailureDate().getTime() - currentFailureDate.getTime()));
-                failure.setEstimatedDate(new Date(nearestInTime.getInterventionDate().getTime() +diff.longValueExact()));
+                failure.setEstimatedDate(new Date(nearestInTime.getInterventionDate().getTime() +Math.abs(diff.longValueExact())));
 
             }
             else {
