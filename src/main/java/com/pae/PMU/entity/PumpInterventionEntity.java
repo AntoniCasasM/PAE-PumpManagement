@@ -18,6 +18,7 @@ public class PumpInterventionEntity {
     private String pumpId;
     @Id
     private Date interventionDate;
+    private String falseId;
     private String remarks;
     private Integer interventionCode;
     private Integer responseTime;
@@ -36,7 +37,7 @@ public class PumpInterventionEntity {
     private Double interventionPrice;
 
     @ElementCollection
-    private List<Pair<String,Double>> materials;
+    private List<MaterialSchema> materials;
 
     public PumpInterventionEntity() {
 
@@ -59,14 +60,15 @@ public class PumpInterventionEntity {
         this.workers=intervention.getWorkers();
         this.costPerWorker=intervention.getCostPerWorker();
         Set<String> ids=new HashSet<>();
-        List<Pair<String,Double>> materialUnitsPair=new ArrayList<>();
+        List<MaterialSchema> materialUnitsPair=new ArrayList<>();
         for (MaterialSchema material:intervention.getMaterials()) {
             if (!ids.contains(material.getMaterial())) {
                 ids.add(material.getMaterial());
-                materialUnitsPair.add(new ImmutablePair<>(material.getMaterial(),material.getUnits()));
+                materialUnitsPair.add(material);
             }
         }
         this.materials=materialUnitsPair;
+        this.falseId=this.pumpId+this.interventionDate;
     }
 
     public Double getInterventionPrice() {
@@ -91,6 +93,14 @@ public class PumpInterventionEntity {
 
     public void setInterventionDate(Date interventionDate) {
         this.interventionDate = interventionDate;
+    }
+
+    public String getFalseId() {
+        return falseId;
+    }
+
+    public void setFalseId(String falseId) {
+        this.falseId = falseId;
     }
 
     public String getRemarks() {
@@ -181,11 +191,11 @@ public class PumpInterventionEntity {
         this.distanceTravelled = distanceTravelled;
     }
 
-    public List<Pair<String, Double>> getMaterials() {
+    public List<MaterialSchema> getMaterials() {
         return materials;
     }
 
-    public void setMaterials(List<Pair<String, Double>> materials) {
+    public void setMaterials(List<MaterialSchema> materials) {
         this.materials = materials;
     }
 

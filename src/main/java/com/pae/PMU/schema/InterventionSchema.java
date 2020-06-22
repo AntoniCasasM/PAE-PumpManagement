@@ -41,6 +41,9 @@ public class InterventionSchema {
     private Integer workers;
     @ApiModelProperty(notes = "Cost per worker.", example = "100", required = true)
     private Integer costPerWorker;
+    @ApiModelProperty(notes = "FalseId.", example = "100", required = true)
+    private String falseId;
+
 
     private List<MaterialSchema> materials;
 
@@ -64,6 +67,20 @@ public class InterventionSchema {
         this.distanceTravelled=intervention.getDistanceTravelled();
         this.workers=intervention.getWorkers();
         this.costPerWorker=intervention.getCostPerWorker();
+        this.falseId=intervention.getFalseId();
+        this.materials=intervention.getMaterials();
+    }
+
+    public void setPumpId(String pumpId) {
+        this.pumpId = pumpId;
+    }
+
+    public String getFalseId() {
+        return falseId;
+    }
+
+    public void setFalseId(String falseId) {
+        this.falseId = falseId;
     }
 
     public String getPumpId() {

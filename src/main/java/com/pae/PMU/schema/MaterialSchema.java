@@ -2,6 +2,9 @@ package com.pae.PMU.schema;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class MaterialSchema {
     @ApiModelProperty(notes = "Id of the material.", example = "Ball bearings", required = true)
     private String material;

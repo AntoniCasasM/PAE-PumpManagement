@@ -1,6 +1,7 @@
 package com.pae.PMU.controller;
 
 import com.pae.PMU.entity.PumpEntity;
+import com.pae.PMU.schema.ReportDropDownSchema;
 import com.pae.PMU.schema.*;
 import com.pae.PMU.service.PMUService;
 import com.pae.PMU.service.PredictionService;
@@ -12,11 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -83,15 +83,25 @@ public class PMUController {
         return new ResponseEntity<List<InterventionSchemaGET>>(res,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "getIntervention", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get interventions of a pump", notes = "")
+    public ResponseEntity getIntervention(@ApiParam(value = "The intervention id.", example="1",required = true) @RequestParam String falseId) throws ParseException {
+        InterventionSchemaGET res=PMUService.getIntervention(falseId);
+        return new ResponseEntity<InterventionSchemaGET>(res,HttpStatus.OK);
+    }
+
     @RequestMapping(value = "getInterventionsBetweenDates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get all interventions of a pump between the dates spaciefied", notes = "")
-    public ResponseEntity getInterventionsBetweenDates(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId, @ApiParam(value = "From this date.",example = "2020-02-02T20:50:12.123Z", required = true) @RequestParam Date from, @ApiParam(value = "Up to this date.", required = true,example = "2020-02-02T20:50:12.123Z") @RequestParam Date to) {
-        List<InterventionSchemaGET> res=PMUService.getInterventionsBetweenDates(pumpId,from,to);
+    @ApiOperation(value = "Get all interventions of a pump between the dates specified", notes = "")
+    public ResponseEntity getInterventionsBetweenDates(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId, @ApiParam(value = "From this date.",example = "2020-02-02T20:50:12.123Z", required = true) @RequestParam String from, @ApiParam(value = "Up to this date.", required = true,example = "2020-02-02T20:50:12.123Z") @RequestParam String to) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss");
+        Date fromDate = sdf.parse(from);
+        Date toDate = sdf.parse(to);
+        List<InterventionSchemaGET> res=PMUService.getInterventionsBetweenDates(pumpId,fromDate,toDate);
         return new ResponseEntity<List<InterventionSchemaGET>>(res,HttpStatus.OK);
     }
 
     @RequestMapping(value = "getPredictedFailureDate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get all interventions of a pump between the dates spaciefied", notes = "")
+    @ApiOperation(value = "Get the predicted failure date", notes = "")
     public ResponseEntity getPredictedFailureDate(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) throws IOException {
         FailureSchema res=PMUService.getPredictedFailureDate(pumpId);
         return new ResponseEntity<FailureSchema>(res,HttpStatus.OK);
@@ -100,8 +110,8 @@ public class PMUController {
     @RequestMapping(value = "getAllIds", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all ids of pumps", notes = "")
     public ResponseEntity getAllIds() throws IOException {
-        Set<String> res=PMUService.getAllIds();
-        return new ResponseEntity<Set<String>>(res,HttpStatus.OK);
+        Set<Integer> res=PMUService.getAllIds();
+        return new ResponseEntity<Set<Integer>>(res,HttpStatus.OK);
     }
 
     @RequestMapping(value = "getOptimalRoute", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -109,6 +119,27 @@ public class PMUController {
     public ResponseEntity getOptimalRoute(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) throws IOException {
         List<String> res= PredictionService.getOptimalRoute(pumpId);
         return new ResponseEntity<List<String>>(res,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "getDropdownValue", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get values for dropdown", notes = "")
+    public ResponseEntity getDropdownValue(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId) throws IOException {
+        ReportDropDownSchema res= PMUService.getDropdownValue(pumpId);
+        return new ResponseEntity<>(res,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "addDropdownValue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Add values for dropdown", notes = "")
+    public ResponseEntity addDropdownValue(@ApiParam(value = "The pump id.", required = true) @RequestParam String pumpId,@RequestBody ReportDropDownSchema report) throws IOException {
+        PMUService.addDropdownValue(pumpId,report);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "loadDropdown", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Add values for dropdown", notes = "")
+    public ResponseEntity loadDropdown() throws IOException {
+        PMUService.loadDropdowns();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

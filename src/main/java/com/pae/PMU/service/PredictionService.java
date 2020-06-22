@@ -4,8 +4,10 @@ import com.pae.PMU.NLP.CosineSimilarity;
 import com.pae.PMU.NLP.TfIdf;
 import com.pae.PMU.entity.PumpEntity;
 import com.pae.PMU.entity.PumpInterventionEntity;
+import com.pae.PMU.entity.ReportDropDownEntity;
 import com.pae.PMU.repository.PumpInterventionRepository;
 import com.pae.PMU.repository.PumpRepository;
+import com.pae.PMU.repository.ReportDropDownRepository;
 import com.pae.PMU.schema.FailureSchema;
 import com.pae.PMU.schema.InterventionSchemaGET;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ public class PredictionService {
         auxiliar.setRemarks(remarks);
         Date current=new Date();
         auxiliar.setInterventionDate(current);
+        auxiliar.setFailureDate(current);
         auxiliar.setPumpId(pump.getId());
         interventions.add(auxiliar);
         PumpInterventionEntity closest=null;
@@ -62,7 +65,6 @@ public class PredictionService {
 
 
         SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd" );
-
 
         if (closest!=null) {
             List<InterventionSchemaGET> orderedByDate = getInterventions(closest.getPumpId());
@@ -238,6 +240,8 @@ public class PredictionService {
 
         return Math.sqrt(distance);
     }
+
+
     private class Deg2LonLat
     {
         double longitude;

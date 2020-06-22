@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,6 +17,11 @@ public interface PumpInterventionRepository extends JpaRepository<PumpInterventi
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "50000")})
     @Fetch(value = FetchMode.SELECT)
     List<PumpInterventionEntity> findByPumpId(String pumpId);
+
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "50000")})
+    @Fetch(value = FetchMode.SELECT)
+    PumpInterventionEntity findByFalseId(String falseId);
+
 
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "50000")})
     @Fetch(value = FetchMode.SELECT)
